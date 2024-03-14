@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bee Hive Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; /* Remove default margin */
+      display: flex; /* Center content horizontally */
+      flex-direction: column; /* Stack content vertically */
+      align-items: center; /* Align content horizontally in center */
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    #errorMessage {
+      display: none;
+      color: red;
+      border: 1px solid red;
+      padding: 10px;
+      width: 250px;
+      margin: 10px auto;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap; /* Allow elements to wrap on smaller screens */
+      justify-content: space-around; /* Distribute elements evenly */
+      width: 80%; /* Set a maximum width for responsiveness */
+      margin: 10px auto;
+    }
+
+    .count-display,
+    .button-container {
+      flex: 1; /* Make elements take up equal space */
+      text-align: center;
+      margin: 5px;
+    }
+
+    .count-display p {
+      font-size: 24px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none; /* Remove default border */
+      background-color: #4CAF50; /* Green color */
+      color: white;
+      cursor: pointer; /* Indicate clickable element */
+    }
+
+    button:hover {
+      background-color: #3e8e41; /* Darker green on hover */
+    }
+
+    input {
+      width: 60px;
+      padding: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bee Hive Manager</h1>
+  <p>Manage your bee hive and earn money!</p>
+  <div class="container">
+    <div class="count-display">
+      <p id="beeCount">Bees: 1</p>
+      <p id="hiveCount">Hives: 1</p>
+      <p id="salesCount">Sales Team: 0</p>
+    </div>
+    <div class="count-display">
+      <p id="honeyCount">Honey: 0</p>
+      <p id="moneyCount">Money: $0</p>
+    </div>
+  </div>
+  <div id="errorMessage"></div>
+
+  <div class="container">
+    <div class="button-container">
+      <button onclick="buyBee()">Buy Bee<br>($10)</button>
+      <input type="number" id="buyBeeCount" value="1">
+    </div>
+    <div class="button-container">
+      <button onclick="sellHoney()">Sell Honey<br>($5)</button>
+      <input type="number" id="sellHoneyCount" value="1">
+    </div>
+    <div class="button-container">
+      <button onclick="buyHive()">Buy Hive<br>($1000, 1000 Honey)</button>
+      <input type="number" id="buyHiveCount" value="1">
+    </div>
+    <div class="button-container">
+      <button onclick="buySales()">Sales Person<br>($10000)</button>
+      <input type="number" id="buySalesCount" value="1">
+    </div>
+  </div>
+
+  <script>
+    </script>
+</body>
+</html>
