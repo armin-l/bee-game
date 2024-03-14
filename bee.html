@@ -32,32 +32,64 @@
       width: 250px;
       margin: 10px auto;
     }
+    .container {
+      display: flex;
+      flex-wrap: wrap; /* Allow elements to wrap on smaller screens */
+      justify-content: space-around; /* Distribute elements evenly */
+      width: 80%; /* Set a maximum width for responsiveness */
+      margin: 10px auto;
+    }
+
+    .count-display,
+    .button-container,
+    .sub-container {
+      flex: 1; /* Make elements take up equal space */
+      text-align: center;
+      margin: 5px;
+    }
+
+    .count-display p {
+      font-size: 24px;
+    }
+
   </style>
 </head>
 <body>
   <h1>Bee Hive Manager</h1>
   <p>Manage your bee hive and earn money!</p>
-  <p>Current counts:</p>
-  <p id="beeCount">Bees: 1</p>
-  <p id="hiveCount">Hives: 1</p>
-  <p id="salesCount">Sales Team: 0</p>
-  <p>-----------------------------</p>
-  <p id="honeyCount">Honey: 0</p>
-  <p id="moneyCount">Money: $0</p>
+  <div class="container">
+    <div class="count-display">
+      <p id="beeCount">Bees: 🐝1</p>
+      <p id="hiveCount">Hives: 🏠1</p>
+      <p id="salesCount">Sales Team: 👩‍💼0</p>
+    </div>
+    <div class="count-display">
+      <p id="honeyCount">Honey: 🍯0</p>
+      <p id="moneyCount">Money: 💲0</p>
+    </div>
+  </div>
   <div id="errorMessage"></div>
 
-  <button onclick="buyBee()">Buy Bee ($10)</button>
+  <div class="container">
+    <div class="sub-container">
+  <button onclick="buyBee()">Buy Bee <br>(💲10)</button>
   <input type="number" id="buyBeeCount" value="1">
-
-  <button onclick="sellHoney()">Sell Honey ($5)</button>
+    </div>  
+    <div class="sub-container">
+  <button onclick="sellHoney()">Sell Honey <br>(💲5)</button>
   <input type="number" id="sellHoneyCount" value="1">
+    </div>  
+    <div class="sub-container">
 
-  <button onclick="buyHive()">Buy Hive ($1000, 1000 Honey)</button>
+  <button onclick="buyHive()">Buy Hive <br>(💲1K, 🍯1K)</button>
   <input type="number" id="buyHiveCount" value="1">
+    </div>  
+    <div class="sub-container">
 
-  <button onclick="buySales()">Sales Person ($10000)</button>
+  <button onclick="buySales()">Sales Person <br>(💲10K)</button>
   <input type="number" id="buySalesCount" value="1">
-
+    </div>
+  </div>
   <script>
   let beeCount = 1;
   let hiveCount = 1;
@@ -66,11 +98,11 @@
   let salesCount = 0;
 
   function updateCounts() {
-    document.getElementById("beeCount").textContent = `Bees: ${beeCount}`;
-    document.getElementById("hiveCount").textContent = `Hives: ${hiveCount}`;
-    document.getElementById("honeyCount").textContent = `Honey: ${honeyCount}`;
-    document.getElementById("moneyCount").textContent = `Money: $${moneyCount}`;
-    document.getElementById("salesCount").textContent = `Sales Team: ${salesCount}`;
+    document.getElementById("beeCount").textContent = `Bees: 🐝${beeCount}`;
+    document.getElementById("hiveCount").textContent = `Hives: 🏠${hiveCount}`;
+    document.getElementById("honeyCount").textContent = `Honey: 🍯${honeyCount}`;
+    document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount}`;
+    document.getElementById("salesCount").textContent = `Sales Team: 👩‍💼${salesCount}`;
   }
 
   function showErrorMessage(message) {
@@ -165,7 +197,7 @@
       { message: "A skunk raids the hive, preying on bees. Bee population is moderately decreased.", modifier: -0.2 },
       { message: "A nearby wildfire destroys a significant amount of flowering plants. Bee population is heavily decreased!", modifier: -0.5 },
       { message: "A sudden cold snap reduces foraging activity and bee survival. Bee population is moderately decreased.", modifier: -0.2 },
-      { message: "A malfunctioning feeder leaks and drowns some bees. Bee population is minimally decreased.", modifier: -0.05 },
+      { message: "A malfunctioning feeder leaks and dsub-containerns some bees. Bee population is minimally decreased.", modifier: -0.05 },
       { message: "The beekeeper accidentally injures some bees during hive inspection. Bee population is minimally decreased.", modifier: -0.05 },
       { message: "A predator attacks the hive! Bee population is slightly decreased.", modifier: -0.1 },
       { message: "Varroa mites infest the hive! Bee population is moderately decreased.", modifier: -0.2 },
