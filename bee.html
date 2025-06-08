@@ -7,237 +7,110 @@
   <meta name="author" content="https://github.com/armin-l/bee-game">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bee Hive Manager</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    #beeCount, #hiveCount, #honeyCount, #moneyCount, #salesCount {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    button {
-      font-size: 16px;
-      padding: 10px 20px;
-      margin: 10px;
-    }
-    input {
-      width: 60px;
-    }
-    #errorMessage {
-      display: none;
-      color: red;
-      border: 1px solid red;
-      padding: 10px;
-      width: 250px;
-      margin: 10px auto;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap; /* Allow elements to wrap on smaller screens */
-      justify-content: space-around; /* Distribute elements evenly */
-      width: 80%; /* Set a maximum width for responsiveness */
-      margin: 10px auto;
-    }
-
-    .count-display,
-    .button-container,
-    .sub-container {
-      flex: 1; /* Make elements take up equal space */
-      text-align: center;
-      margin: 5px;
-    }
-
-    .count-display p {
-      font-size: 24px;
-    }
-
-  </style>
+  <link rel="stylesheet" href="bee.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Bee Hive Manager</h1>
-  <p>Manage your bee hive and earn money!</p>
-  <div class="container">
-    <div class="count-display">
-      <p id="beeCount">Bees: 🐝1</p>
-      <p id="hiveCount">Hives: 🏠1</p>
-      <p id="salesCount">Sales Team: 👩‍💼0</p>
+  <header class="center-align">
+    <h1>Bee Hive Manager</h1>
+    <p>Manage your bee hive and earn money!</p>
+<div class="switch center-align">
+  <label>
+    Light
+    <input type="checkbox" id="darkModeToggle">
+    <span class="lever"></span>
+    Dark
+  </label>
+</div>
+  </header>
+
+  <main class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Counts</span>
+            <p id="beeCount">Bees: 🐝1</p>
+            <p id="hiveCount">Hives: 🏠1</p>
+            <p id="salesCount">Sales Team: 👩‍💼0</p>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Resources</span>
+            <p id="honeyCount">Honey: 🍯0</p>
+            <p id="moneyCount">Money: 💲0</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="count-display">
-      <p id="honeyCount">Honey: 🍯0</p>
-      <p id="moneyCount">Money: 💲0</p>
+
+    <div id="errorMessage" class="red-text center-align"></div>
+
+    <div class="row">
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buyBee()">Buy Bee</button>
+            <p>(💲10)</p>
+            <input type="number" id="buyBeeCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buyBeeCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buyBeeCount', 10)">x10</button>
+              <button class="btn-small" onclick="multiplyAmount('buyBeeCount', 100)">x100</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="sellHoney()">Sell Honey</button>
+            <p>(💲5)</p>
+            <input type="number" id="sellHoneyCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('sellHoneyCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('sellHoneyCount', 10)">x10</button>
+              <button class="btn-small" onclick="multiplyAmount('sellHoneyCount', 100)">x100</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buyHive()">Buy Hive</button>
+            <p>(💲1K, 🍯1K)</p>
+            <input type="number" id="buyHiveCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buyHiveCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buyHiveCount', 10)">x10</button>
+              <button class="btn-small" onclick="multiplyAmount('buyHiveCount', 100)">x100</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buySales()">Sales Person</button>
+            <p>(💲10K)</p>
+            <input type="number" id="buySalesCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buySalesCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buySalesCount', 10)">x10</button>
+              <button class="btn-small" onclick="multiplyAmount('buySalesCount', 100)">x100</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div id="errorMessage"></div>
+  </main>
 
-  <div class="container">
-    <div class="sub-container">
-  <button onclick="buyBee()">Buy Bee <br>(💲10)</button>
-  <input type="number" id="buyBeeCount" value="1">
-    </div>  
-    <div class="sub-container">
-  <button onclick="sellHoney()">Sell Honey <br>(💲5)</button>
-  <input type="number" id="sellHoneyCount" value="1">
-    </div>  
-    <div class="sub-container">
-
-  <button onclick="buyHive()">Buy Hive <br>(💲1K, 🍯1K)</button>
-  <input type="number" id="buyHiveCount" value="1">
-    </div>  
-    <div class="sub-container">
-
-  <button onclick="buySales()">Sales Person <br>(💲10K)</button>
-  <input type="number" id="buySalesCount" value="1">
-    </div>
-  </div>
-  <script>
-  let beeCount = 1;
-  let hiveCount = 1;
-  let honeyCount = 0;
-  let moneyCount = 0;
-  let salesCount = 0;
-
-  function updateCounts() {
-    document.getElementById("beeCount").textContent = `Bees: 🐝${beeCount}`;
-    document.getElementById("hiveCount").textContent = `Hives: 🏠${hiveCount}`;
-    document.getElementById("honeyCount").textContent = `Honey: 🍯${honeyCount}`;
-    document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount}`;
-    document.getElementById("salesCount").textContent = `Sales Team: 👩‍💼${salesCount}`;
-  }
-
-  function showErrorMessage(message) {
-    const errorMessageElement = document.getElementById("errorMessage");
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = "block";
-  }
-
-  function hideErrorMessage() {
-    const errorMessageElement = document.getElementById("errorMessage");
-    errorMessageElement.textContent = "";
-    errorMessageElement.style.display = "none";
-  }
-
-  function buySales() {
-    const buySalesamount = parseInt(document.getElementById("buySalesCount").value);
-
-    if (moneyCount >= 10000 * buySalesamount) {
-      salesCount += buySalesamount;
-      moneyCount -= 10000 * buySalesamount;
-      updateCounts();
-      hideErrorMessage();
-    } else {
-      showErrorMessage("Not enough money to buy that many Sales People!");
-    }
-  }
-
-  function buyBee() {
-    const buyBeeamount = parseInt(document.getElementById("buyBeeCount").value);
-
-    if (moneyCount >= 10 * buyBeeamount) {
-      beeCount += buyBeeamount;
-      moneyCount -= 10 * buyBeeamount;
-      updateCounts();
-      hideErrorMessage();
-    } else {
-      showErrorMessage("Not enough money to buy that many bees!");
-    }
-  
-  }
-
-  function sellHoney() {
-    const sellHoneyamount = parseInt(document.getElementById("sellHoneyCount").value);
-
-    if (honeyCount > 0 && honeyCount >= sellHoneyamount) {
-      moneyCount += 5 * sellHoneyamount;
-      honeyCount -= 1 * sellHoneyamount;
-      updateCounts();
-      hideErrorMessage();
-    } else {
-      showErrorMessage("You have no honey to sell!");
-    }
-  }
-
-  function buyHive() {
-    const buyHiveamount = parseInt(document.getElementById("buyHiveCount").value);
-
-    if (moneyCount >= 1000 * buyHiveamount && honeyCount >= 1000 * buyHiveamount) {
-      hiveCount += buyHiveamount;
-      moneyCount -= 1000 * buyHiveamount;
-      honeyCount -= 1000 * buyHiveamount;
-      updateCounts();
-      hideErrorMessage();
-    } else {
-      showErrorMessage("Not enough money and honey to buy that many hives!");
-    }
-  }
-
-  function getRandomEvent() {
-    const events = [
-    // Positive Events
-      { message: "The queen bee lays a healthy batch of eggs! Bee population is significantly increased!", modifier: 0.3 },
-      { message: "The bees discover a new nesting ground! Bee population is slightly increased.", modifier: 0.1 },
-      { message: "Favorable weather conditions promote brood rearing. Bee population is minimally increased.", modifier: 0.05 },
-      { message: "A new generation of worker bees emerges! Bee population is moderately increased.", modifier: 0.2 },
-      { message: "The hive successfully swarms and establishes a new colony! Bee population is significantly increased.", modifier: 0.4 },
-      { message: "A plentiful pollen source leads to increased brood rearing. Bee population is minimally increased.", modifier: 0.05 },
-      { message: "The beekeeper adds a new feeder full of pollen substitute. Bee population is slightly increased.", modifier: 0.1 },
-      { message: "A successful mite treatment eliminates Varroa infestation. Bee population recovers slightly.", modifier: 0.1 },
-      // Neutral Events
-      { message: "A scout bee returns, unable to locate a new nectar source. No change in bee population.", modifier: 0 },
-      { message: "The beekeeper performs a routine hive inspection. No change in bee population.", modifier: 0 },
-      { message: "A light rain showers the area, providing some moisture for the bees. No change in bee population.", modifier: 0 },
-      { message: "The bees spend a sunny day cleaning the hive and preparing for brood rearing. No change in bee population.", modifier: 0 },
-      { message: "The hive experiences a natural fluctuation in bee population. No change in bee population.", modifier: 0 },
-      // Negative Events
-      { message: "A late frost damages nearby flowers, reducing pollen availability. Bee population is slightly decreased.", modifier: -0.1 },
-      { message: "A strong windstorm disrupts the hive entrance, causing bee deaths. Bee population is minimally decreased.", modifier: -0.05 },
-      { message: "A nearby pesticide application contaminates flowers, harming foraging bees. Bee population is moderately decreased.", modifier: -0.2 },
-      { message: "The drone population reaches its peak, leading to increased competition for resources. Bee population is slightly decreased.", modifier: -0.1 },
-      { message: "The queen bee's egg-laying slows down due to age. Bee population slowly decreases.", modifier: -0.1 },
-      { message: "A skunk raids the hive, preying on bees. Bee population is moderately decreased.", modifier: -0.2 },
-      { message: "A nearby wildfire destroys a significant amount of flowering plants. Bee population is heavily decreased!", modifier: -0.5 },
-      { message: "A sudden cold snap reduces foraging activity and bee survival. Bee population is moderately decreased.", modifier: -0.2 },
-      { message: "A malfunctioning feeder leaks and dsub-containerns some bees. Bee population is minimally decreased.", modifier: -0.05 },
-      { message: "The beekeeper accidentally injures some bees during hive inspection. Bee population is minimally decreased.", modifier: -0.05 },
-      { message: "A predator attacks the hive! Bee population is slightly decreased.", modifier: -0.1 },
-      { message: "Varroa mites infest the hive! Bee population is moderately decreased.", modifier: -0.2 },
-      { message: "A harsh winter reduces the bee population. Bee population is heavily decreased!", modifier: -0.5 },
-    ];
-
-
-    const randomIndex = Math.floor(Math.random() * events.length);
-    const event = events[randomIndex];
-
-    showErrorMessage(event.message);
-    return event.modifier;
-  }
-
-  // Random Event
-  setInterval(function() {
-    beeCount += Math.trunc(beeCount * getRandomEvent());
-    updateCounts();
-  }, 600000); // 1 hour in milliseconds
-
-
-  // Bee production every hour
-  setInterval(function() {
-    beeCount += hiveCount;
-    updateCounts();
-  }, 10000); // 10 seconds in milliseconds
-
-  // Honey production every second
-  setInterval(function() {
-    // bee production
-    honeyCount += beeCount;
-
-    // sales team
-    if (honeyCount >= 5 * salesCount && salesCount > 0) {
-      honeyCount -= salesCount * 5;
-      moneyCount += salesCount * 4 * 5;
-    }
-
-    updateCounts();
-  }, 1000); // 1 second in milliseconds
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="bee.js"></script>
 </body>
 </html>
