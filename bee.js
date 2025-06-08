@@ -217,6 +217,10 @@ document.getElementById("darkModeToggle").addEventListener("click", function() {
 
 // Apply saved theme on page load
 document.addEventListener("DOMContentLoaded", function() {
+  // Initialize Materialize tooltips
+  const tooltips = document.querySelectorAll('.tooltipped');
+  M.Tooltip.init(tooltips);
+
   // Load game state on page load
   loadGameState();
   updateCounts();

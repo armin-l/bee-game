@@ -30,7 +30,6 @@
       <div class="col s12 m6">
         <div class="card">
           <div class="card-content">
-            <span class="card-title">Counts</span>
             <p id="beeCount">Bees: 🐝1</p>
             <p id="hiveCount">Hives: 🏠1</p>
             <p id="salesCount">Sales Team: 👩‍💼0</p>
@@ -40,7 +39,6 @@
       <div class="col s12 m6">
         <div class="card">
           <div class="card-content">
-            <span class="card-title">Resources</span>
             <p id="honeyCount">Honey: 🍯0</p>
             <p id="moneyCount">Money: 💲0</p>
           </div>
@@ -54,7 +52,10 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-            <button class="btn waves-effect waves-light" onclick="buyBee()">Buy Bee</button>
+<button class="btn waves-effect waves-light" onclick="buyBee()">Buy Bee</button>
+<div style="position: absolute; bottom: 10px; left: 10px;">
+  <i class="material-icons tooltipped" data-tooltip="Buy bees to produce honey.">info</i>
+</div>
             <p>(💲10)</p>
             <input type="number" id="buyBeeCount" value="1" class="input-field">
             <div class="button-group">
@@ -68,7 +69,10 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-            <button class="btn waves-effect waves-light" onclick="sellHoney()">Sell Honey</button>
+<button class="btn waves-effect waves-light" onclick="sellHoney()">Sell Honey</button>
+<div style="position: absolute; bottom: 10px; left: 10px;">
+  <i class="material-icons tooltipped" data-tooltip="Sell honey to earn money.">info</i>
+</div>
             <p>(💲5)</p>
             <input type="number" id="sellHoneyCount" value="1" class="input-field">
             <div class="button-group">
@@ -82,7 +86,10 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-            <button class="btn waves-effect waves-light" onclick="buyHive()">Buy Hive</button>
+<button class="btn waves-effect waves-light" onclick="buyHive()">Buy Hive</button>
+<div style="position: absolute; bottom: 10px; left: 10px;">
+  <i class="material-icons tooltipped" data-tooltip="Buy hives to house more bees.">info</i>
+</div>
             <p>(💲1K, 🍯1K)</p>
             <input type="number" id="buyHiveCount" value="1" class="input-field">
             <div class="button-group">
@@ -96,7 +103,10 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-            <button class="btn waves-effect waves-light" onclick="buySales()">Sales Person</button>
+<button class="btn waves-effect waves-light" onclick="buySales()">Sales Person</button>
+<div style="position: absolute; bottom: 10px; left: 10px;">
+  <i class="material-icons tooltipped" data-tooltip="Hire salespeople to boost honey sales.">info</i>
+</div>
             <p>(💲10K)</p>
             <input type="number" id="buySalesCount" value="1" class="input-field">
             <div class="button-group">
