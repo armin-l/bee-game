@@ -4,6 +4,35 @@ let honeyCount = 0;
 let moneyCount = 0;
 let salesCount = 0;
 
+// Save game state to localStorage
+function saveGameState() {
+  const gameState = {
+    beeCount,
+    hiveCount,
+    honeyCount,
+    moneyCount,
+    salesCount,
+  };
+  localStorage.setItem("gameState", JSON.stringify(gameState));
+}
+
+// Load game state from localStorage
+function loadGameState() {
+  const savedState = localStorage.getItem("gameState");
+  if (savedState) {
+    try {
+      const gameState = JSON.parse(savedState);
+      beeCount = gameState.beeCount || 1;
+      hiveCount = gameState.hiveCount || 1;
+      honeyCount = gameState.honeyCount || 0;
+      moneyCount = gameState.moneyCount || 0;
+      salesCount = gameState.salesCount || 0;
+    } catch (error) {
+      console.error("Failed to load game state:", error);
+    }
+  }
+}
+
 // Sets the input field value to a specific amount
 function setAmount(inputId, value) {
   const inputField = document.getElementById(inputId);
@@ -22,6 +51,7 @@ function updateCounts() {
   document.getElementById("honeyCount").textContent = `Honey: 🍯${honeyCount}`;
   document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount}`;
   document.getElementById("salesCount").textContent = `Sales Team: 👩‍💼${salesCount}`;
+  saveGameState();
 }
 
 function showErrorMessage(message) {
@@ -165,6 +195,10 @@ document.getElementById("darkModeToggle").addEventListener("click", function() {
 
 // Apply saved theme on page load
 document.addEventListener("DOMContentLoaded", function() {
+  // Load game state on page load
+  loadGameState();
+  updateCounts();
+
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     document.body.classList.add("dark-mode");
