@@ -43,7 +43,29 @@ function setAmount(inputId, value) {
 function multiplyAmount(inputId, factor) {
   const inputField = document.getElementById(inputId);
   const currentValue = parseInt(inputField.value) || 0;
-  inputField.value = currentValue * factor;
+
+  if (factor === "max") {
+    let maxValue = 0;
+
+    switch (inputId) {
+      case "buyBeeCount":
+        maxValue = Math.floor(moneyCount / 10);
+        break;
+      case "sellHoneyCount":
+        maxValue = honeyCount;
+        break;
+      case "buyHiveCount":
+        maxValue = Math.min(Math.floor(moneyCount / 1000), Math.floor(honeyCount / 1000));
+        break;
+      case "buySalesCount":
+        maxValue = Math.floor(moneyCount / 10000);
+        break;
+    }
+
+    inputField.value = maxValue;
+  } else {
+    inputField.value = currentValue * factor;
+  }
 }
 function updateCounts() {
   document.getElementById("beeCount").textContent = `Bees: 🐝${beeCount}`;
