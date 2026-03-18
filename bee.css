@@ -152,6 +152,25 @@ button:hover {
   background-color: #d4a017; /* Golden brown for hover effect */
 }
 
+/* Reduce Buttons (-1) */
+button.reduce-btn {
+  background-color: #FF6B6B; /* Red for reduce buttons in light mode */
+  color: white;
+}
+
+button.reduce-btn:hover {
+  background-color: #CC5555; /* Darker red on hover */
+}
+
+body.dark-mode button.reduce-btn {
+  background-color: #FF8A80; /* Lighter red for dark mode */
+  color: white;
+}
+
+body.dark-mode button.reduce-btn:hover {
+  background-color: #FF6E6E; /* Darker red on hover in dark mode */
+}
+
 /* Inputs */
 input {
   width: 80px;

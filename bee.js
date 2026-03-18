@@ -14,7 +14,7 @@ const MANAGER_COST = 50000;
 const MARKETER_COST = 20000;
 const BASE_HONEY_SELL_PRICE = 5;
 const MARKETER_PRICE_BONUS = 0.05;
-const MANAGER_CUT_PER_HONEY = 1;
+const MANAGER_CUT_PER_HONEY_PER_MANAGER = 1;
 const MAX_EVENT_LOG_ENTRIES = 20;
 
 function getMaxBeeCapacity() {
@@ -38,7 +38,7 @@ function getHoneySellPricePerUnit() {
 }
 
 function getNetHoneyRevenuePerUnit() {
-  return roundToCents(getHoneySellPricePerUnit() - MANAGER_CUT_PER_HONEY);
+  return roundToCents(getHoneySellPricePerUnit() - managerCount * MANAGER_CUT_PER_HONEY_PER_MANAGER);
 }
 
 function clampBeeCount() {
@@ -147,7 +147,8 @@ function updateCounts() {
   document.getElementById("managerCount").textContent = `Managers: 🧑‍💼${managerCount}`;
   document.getElementById("marketerCount").textContent = `Marketers: 📣${marketerCount}`;
   document.getElementById("staffCap").textContent = `Sales + Marketers Capacity: ${salesCount + marketerCount}/${getMaxSalesAndMarketers()}`;
-  document.getElementById("sellPrice").textContent = `Honey Sell Price: 💲${getHoneySellPricePerUnit().toFixed(2)} each (Manager cut: 💲${MANAGER_CUT_PER_HONEY.toFixed(2)})`;
+  document.getElementById("sellPrice").textContent = `Honey Sell Price: 💲${getHoneySellPricePerUnit().toFixed(2)} each`;
+  document.getElementById("managerCut").textContent = `Manager Cut: 💲${(managerCount * MANAGER_CUT_PER_HONEY_PER_MANAGER).toFixed(2)} total per glass`;
   saveGameState();
 }
 
@@ -355,6 +356,36 @@ function buyHive() {
     hideErrorMessage();
   } else {
     showErrorMessage("Not enough money and honey to buy that many hives!");
+  }
+}
+
+function reduceSales() {
+  if (salesCount > 0) {
+    salesCount -= 1;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("You have no Sales People to remove!");
+  }
+}
+
+function reduceManager() {
+  if (managerCount > 1) {
+    managerCount -= 1;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("You must have at least 1 Manager!");
+  }
+}
+
+function reduceMarketer() {
+  if (marketerCount > 0) {
+    marketerCount -= 1;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("You have no Marketers to remove!");
   }
 }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="description" content="Bee Hive Idle Game">
@@ -11,18 +12,19 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
 </head>
+
 <body>
   <header class="center-align">
     <h1>Bee Hive Manager</h1>
     <p>Manage your bee hive and earn money!</p>
-<div class="switch center-align">
-  <label>
-    Light
-    <input type="checkbox" id="darkModeToggle">
-    <span class="lever"></span>
-    Dark
-  </label>
-</div>
+    <div class="switch center-align">
+      <label>
+        Light
+        <input type="checkbox" id="darkModeToggle">
+        <span class="lever"></span>
+        Dark
+      </label>
+    </div>
   </header>
 
   <main class="container">
@@ -51,7 +53,8 @@
           <div class="card-content">
             <p id="honeyCount">Honey: 🍯0</p>
             <p id="moneyCount">Money: 💲0</p>
-            <p id="sellPrice">Honey Sell Price: 💲5.00 each (Manager cut: 💲1.00)</p>
+            <p id="sellPrice">Honey Sell Price: 💲5.00 each</p>
+            <p id="managerCut">Manager Cut: 💲1.00 total per glass</p>
           </div>
         </div>
       </div>
@@ -63,16 +66,16 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buyBee()">Buy Bee</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Buy bees to produce honey.">info</i>
-</div>
+            <button class="btn waves-effect waves-light" onclick="buyBee()">Buy Bee</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped" data-tooltip="Buy bees to produce honey.">info</i>
+            </div>
             <p>(💲10)</p>
             <input type="number" id="buyBeeCount" value="1" class="input-field">
             <div class="button-group">
               <button class="btn-small" onclick="setAmount('buyBeeCount', 1)">1</button>
               <button class="btn-small" onclick="multiplyAmount('buyBeeCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buyBeeCount', 'max')">Max</button>
+              <button class="btn-small" onclick="multiplyAmount('buyBeeCount', 'max')">Max</button>
             </div>
           </div>
         </div>
@@ -80,16 +83,16 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="sellHoney()">Sell Honey</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Sell honey to earn money.">info</i>
-</div>
+            <button class="btn waves-effect waves-light" onclick="sellHoney()">Sell Honey</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped" data-tooltip="Sell honey to earn money.">info</i>
+            </div>
             <p>(💲5)</p>
             <input type="number" id="sellHoneyCount" value="1" class="input-field">
             <div class="button-group">
               <button class="btn-small" onclick="setAmount('sellHoneyCount', 1)">1</button>
               <button class="btn-small" onclick="multiplyAmount('sellHoneyCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('sellHoneyCount', 'max')">Max</button>
+              <button class="btn-small" onclick="multiplyAmount('sellHoneyCount', 'max')">Max</button>
             </div>
           </div>
         </div>
@@ -97,16 +100,16 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buyHive()">Buy Hive</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Buy hives to house more bees.">info</i>
-</div>
+            <button class="btn waves-effect waves-light" onclick="buyHive()">Buy Hive</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped" data-tooltip="Buy hives to house more bees.">info</i>
+            </div>
             <p>(💲1K, 🍯1K)</p>
             <input type="number" id="buyHiveCount" value="1" class="input-field">
             <div class="button-group">
               <button class="btn-small" onclick="setAmount('buyHiveCount', 1)">1</button>
               <button class="btn-small" onclick="multiplyAmount('buyHiveCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buyHiveCount', 'max')">Max</button>
+              <button class="btn-small" onclick="multiplyAmount('buyHiveCount', 'max')">Max</button>
             </div>
           </div>
         </div>
@@ -114,67 +117,71 @@
       <div class="col s12 m3">
         <div class="card">
           <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buySales()">Sales Person</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Hire salespeople to boost honey sales.">info</i>
-</div>
-            <p>(💲10K)</p>
-            <input type="number" id="buySalesCount" value="1" class="input-field">
-            <div class="button-group">
-              <button class="btn-small" onclick="setAmount('buySalesCount', 1)">1</button>
-              <button class="btn-small" onclick="multiplyAmount('buySalesCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buySalesCount', 'max')">Max</button>
+            <button class="btn waves-effect waves-light" onclick="buyPlot()">Buy Plot</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped"
+                data-tooltip="Buy more land to support up to 10 additional hives per plot.">info</i>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col s12 m3">
-        <div class="card">
-          <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buyManager()">Manager</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Managers increase staffing capacity and take a cut on each honey sold.">info</i>
-</div>
-            <p>(💲50K)</p>
-            <input type="number" id="buyManagerCount" value="1" class="input-field">
-            <div class="button-group">
-              <button class="btn-small" onclick="setAmount('buyManagerCount', 1)">1</button>
-              <button class="btn-small" onclick="multiplyAmount('buyManagerCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buyManagerCount', 'max')">Max</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col s12 m3">
-        <div class="card">
-          <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buyMarketer()">Marketer</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Each marketer increases honey sale price by 5%.">info</i>
-</div>
-            <p>(💲20K)</p>
-            <input type="number" id="buyMarketerCount" value="1" class="input-field">
-            <div class="button-group">
-              <button class="btn-small" onclick="setAmount('buyMarketerCount', 1)">1</button>
-              <button class="btn-small" onclick="multiplyAmount('buyMarketerCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buyMarketerCount', 'max')">Max</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col s12 m3">
-        <div class="card">
-          <div class="card-content">
-<button class="btn waves-effect waves-light" onclick="buyPlot()">Buy Plot</button>
-<div style="position: absolute; bottom: 10px; left: 10px;">
-  <i class="material-icons tooltipped" data-tooltip="Buy more land to support up to 10 additional hives per plot.">info</i>
-</div>
             <p>(💲1M)</p>
             <input type="number" id="buyPlotCount" value="1" class="input-field">
             <div class="button-group">
               <button class="btn-small" onclick="setAmount('buyPlotCount', 1)">1</button>
               <button class="btn-small" onclick="multiplyAmount('buyPlotCount', 10)">x10</button>
-<button class="btn-small" onclick="multiplyAmount('buyPlotCount', 'max')">Max</button>
+              <button class="btn-small" onclick="multiplyAmount('buyPlotCount', 'max')">Max</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buyManager()">Manager</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped"
+                data-tooltip="Managers increase staffing capacity and take a cut on each honey sold.">info</i>
+            </div>
+            <p>(💲50K)</p>
+            <input type="number" id="buyManagerCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buyManagerCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buyManagerCount', 10)">x10</button>
+              <button class="btn-small reduce-btn" onclick="reduceManager()">-1</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buyMarketer()">Marketer</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped"
+                data-tooltip="Each marketer increases honey sale price by 5%.">info</i>
+            </div>
+            <p>(💲20K)</p>
+            <input type="number" id="buyMarketerCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buyMarketerCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buyMarketerCount', 10)">x10</button>
+              <button class="btn-small reduce-btn" onclick="reduceMarketer()">-1</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+            <button class="btn waves-effect waves-light" onclick="buySales()">Sales Person</button>
+            <div style="position: absolute; bottom: 10px; left: 10px;">
+              <i class="material-icons tooltipped" data-tooltip="Hire salespeople to boost honey sales.">info</i>
+            </div>
+            <p>(💲10K)</p>
+            <input type="number" id="buySalesCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buySalesCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buySalesCount', 10)">x10</button>
+              <button class="btn-small reduce-btn" onclick="reduceSales()">-1</button>
             </div>
           </div>
         </div>
@@ -192,4 +199,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="bee.js"></script>
 </body>
+
 </html>
