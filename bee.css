@@ -138,12 +138,20 @@ input {
   flex-basis: 50%;
 }
 
+.col.m4 {
+  flex-basis: 33.3333%;
+}
+
 .col.m3 {
   flex-basis: 25%;
 }
 
 /* Media Queries */
 @media (max-width: 768px) {
+  .col.m4 {
+    flex-basis: 100%;
+  }
+
   .col.m6 {
     flex-basis: 100%;
   }

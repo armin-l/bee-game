@@ -4,9 +4,17 @@ let plotCount = 1;
 let honeyCount = 0;
 let moneyCount = 0;
 let salesCount = 0;
+let managerCount = 1;
+let marketerCount = 0;
 
 const HIVES_PER_PLOT = 10;
 const PLOT_COST = 1000000;
+const SALES_COST = 10000;
+const MANAGER_COST = 50000;
+const MARKETER_COST = 20000;
+const BASE_HONEY_SELL_PRICE = 5;
+const MARKETER_PRICE_BONUS = 0.05;
+const MANAGER_CUT_PER_HONEY = 1;
 
 function getMaxBeeCapacity() {
   return hiveCount * 50;
@@ -14,6 +22,22 @@ function getMaxBeeCapacity() {
 
 function getMaxHiveCapacity() {
   return plotCount * HIVES_PER_PLOT;
+}
+
+function getMaxSalesAndMarketers() {
+  return managerCount * 7;
+}
+
+function roundToCents(value) {
+  return Math.round(value * 100) / 100;
+}
+
+function getHoneySellPricePerUnit() {
+  return roundToCents(BASE_HONEY_SELL_PRICE * (1 + marketerCount * MARKETER_PRICE_BONUS));
+}
+
+function getNetHoneyRevenuePerUnit() {
+  return roundToCents(getHoneySellPricePerUnit() - MANAGER_CUT_PER_HONEY);
 }
 
 function clampBeeCount() {
@@ -32,6 +56,8 @@ function saveGameState() {
     honeyCount,
     moneyCount,
     salesCount,
+    managerCount,
+    marketerCount,
   };
   localStorage.setItem("gameState", JSON.stringify(gameState));
 }
@@ -48,6 +74,8 @@ function loadGameState() {
       honeyCount = gameState.honeyCount || 0;
       moneyCount = gameState.moneyCount || 0;
       salesCount = gameState.salesCount || 0;
+      managerCount = gameState.managerCount || 1;
+      marketerCount = gameState.marketerCount || 0;
       clampBeeCount();
     } catch (error) {
       console.error("Failed to load game state:", error);
@@ -84,7 +112,19 @@ function multiplyAmount(inputId, factor) {
         );
         break;
       case "buySalesCount":
-        maxValue = Math.floor(moneyCount / 10000);
+        maxValue = Math.min(
+          Math.floor(moneyCount / SALES_COST),
+          Math.max(0, getMaxSalesAndMarketers() - (salesCount + marketerCount))
+        );
+        break;
+      case "buyManagerCount":
+        maxValue = Math.floor(moneyCount / MANAGER_COST);
+        break;
+      case "buyMarketerCount":
+        maxValue = Math.min(
+          Math.floor(moneyCount / MARKETER_COST),
+          Math.max(0, getMaxSalesAndMarketers() - (salesCount + marketerCount))
+        );
         break;
       case "buyPlotCount":
         maxValue = Math.floor(moneyCount / PLOT_COST);
@@ -101,8 +141,12 @@ function updateCounts() {
   document.getElementById("hiveCount").textContent = `Hives: 🏠${hiveCount}/${getMaxHiveCapacity()}`;
   document.getElementById("plotCount").textContent = `Plots of Land: 🌱${plotCount}`;
   document.getElementById("honeyCount").textContent = `Honey: 🍯${honeyCount}`;
-  document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount}`;
+  document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount.toFixed(2)}`;
   document.getElementById("salesCount").textContent = `Sales Team: 👩‍💼${salesCount}`;
+  document.getElementById("managerCount").textContent = `Managers: 🧑‍💼${managerCount}`;
+  document.getElementById("marketerCount").textContent = `Marketers: 📣${marketerCount}`;
+  document.getElementById("staffCap").textContent = `Sales + Marketers Capacity: ${salesCount + marketerCount}/${getMaxSalesAndMarketers()}`;
+  document.getElementById("sellPrice").textContent = `Honey Sell Price: 💲${getHoneySellPricePerUnit().toFixed(2)} each (Manager cut: 💲${MANAGER_CUT_PER_HONEY.toFixed(2)})`;
   saveGameState();
 }
 
@@ -131,6 +175,8 @@ function resetGame() {
   honeyCount = 0;
   moneyCount = 0;
   salesCount = 0;
+  managerCount = 1;
+  marketerCount = 0;
 
   localStorage.removeItem("gameState");
 
@@ -138,6 +184,8 @@ function resetGame() {
   setAmount("sellHoneyCount", 1);
   setAmount("buyHiveCount", 1);
   setAmount("buySalesCount", 1);
+  setAmount("buyManagerCount", 1);
+  setAmount("buyMarketerCount", 1);
   setAmount("buyPlotCount", 1);
 
   hideErrorMessage();
@@ -146,14 +194,62 @@ function resetGame() {
 
 function buySales() {
   const buySalesamount = parseInt(document.getElementById("buySalesCount").value);
+  const availableStaffSlots = getMaxSalesAndMarketers() - (salesCount + marketerCount);
 
-  if (moneyCount >= 10000 * buySalesamount) {
+  if (availableStaffSlots <= 0) {
+    showErrorMessage("Staff capacity reached! Buy more managers to hire more Sales People or Marketers.");
+    return;
+  }
+
+  if (buySalesamount > availableStaffSlots) {
+    showErrorMessage(`You can only hire ${availableStaffSlots} more Sales People with your current managers.`);
+    return;
+  }
+
+  if (moneyCount >= SALES_COST * buySalesamount) {
     salesCount += buySalesamount;
-    moneyCount -= 10000 * buySalesamount;
+    moneyCount -= SALES_COST * buySalesamount;
     updateCounts();
     hideErrorMessage();
   } else {
     showErrorMessage("Not enough money to buy that many Sales People!");
+  }
+}
+
+function buyManager() {
+  const buyManagerAmount = parseInt(document.getElementById("buyManagerCount").value);
+
+  if (moneyCount >= MANAGER_COST * buyManagerAmount) {
+    managerCount += buyManagerAmount;
+    moneyCount -= MANAGER_COST * buyManagerAmount;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("Not enough money to buy that many Managers!");
+  }
+}
+
+function buyMarketer() {
+  const buyMarketerAmount = parseInt(document.getElementById("buyMarketerCount").value);
+  const availableStaffSlots = getMaxSalesAndMarketers() - (salesCount + marketerCount);
+
+  if (availableStaffSlots <= 0) {
+    showErrorMessage("Staff capacity reached! Buy more managers to hire more Marketers or Sales People.");
+    return;
+  }
+
+  if (buyMarketerAmount > availableStaffSlots) {
+    showErrorMessage(`You can only hire ${availableStaffSlots} more Marketers with your current managers.`);
+    return;
+  }
+
+  if (moneyCount >= MARKETER_COST * buyMarketerAmount) {
+    marketerCount += buyMarketerAmount;
+    moneyCount -= MARKETER_COST * buyMarketerAmount;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("Not enough money to buy that many Marketers!");
   }
 }
 
@@ -198,7 +294,7 @@ function sellHoney() {
   const sellHoneyamount = parseInt(document.getElementById("sellHoneyCount").value);
 
   if (honeyCount > 0 && honeyCount >= sellHoneyamount) {
-    moneyCount += 5 * sellHoneyamount;
+    moneyCount = roundToCents(moneyCount + getNetHoneyRevenuePerUnit() * sellHoneyamount);
     honeyCount -= 1 * sellHoneyamount;
     updateCounts();
     hideErrorMessage();
@@ -290,8 +386,9 @@ setInterval(function() {
   honeyCount += beeCount;
 
   if (honeyCount >= 5 * salesCount && salesCount > 0) {
-    honeyCount -= salesCount * 5;
-    moneyCount += salesCount * 4 * 5;
+    const honeySoldBySales = salesCount * 5;
+    honeyCount -= honeySoldBySales;
+    moneyCount = roundToCents(moneyCount + getNetHoneyRevenuePerUnit() * honeySoldBySales);
   }
 
   updateCounts();
