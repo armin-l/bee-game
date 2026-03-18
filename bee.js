@@ -371,6 +371,14 @@ function reduceSales() {
 
 function reduceManager() {
   if (managerCount > 1) {
+    const currentStaffCount = salesCount + marketerCount;
+    const newMaxCapacity = (managerCount - 1) * 7;
+    
+    if (currentStaffCount > newMaxCapacity) {
+      showErrorMessage(`You cannot remove this manager! You have ${currentStaffCount} sales/marketing staff but would only have capacity for ${newMaxCapacity}. Remove staff before removing this manager.`);
+      return;
+    }
+    
     managerCount -= 1;
     updateCounts();
     hideErrorMessage();
