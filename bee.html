@@ -30,8 +30,9 @@
       <div class="col s12 m6">
         <div class="card">
           <div class="card-content">
-            <p id="beeCount">Bees: 🐝1</p>
+            <p id="beeCount">Thousand Bees: 🐝1</p>
             <p id="hiveCount">Hives: 🏠1</p>
+            <p id="plotCount">Plots of Land: 🌱1</p>
             <p id="salesCount">Sales Team: 👩‍💼0</p>
           </div>
         </div>
@@ -107,7 +108,7 @@
 <div style="position: absolute; bottom: 10px; left: 10px;">
   <i class="material-icons tooltipped" data-tooltip="Hire salespeople to boost honey sales.">info</i>
 </div>
-            <p>(💲10K)</p>
+            <p>(💲1M)</p>
             <input type="number" id="buySalesCount" value="1" class="input-field">
             <div class="button-group">
               <button class="btn-small" onclick="setAmount('buySalesCount', 1)">1</button>
@@ -117,8 +118,27 @@
           </div>
         </div>
       </div>
+      <div class="col s12 m3">
+        <div class="card">
+          <div class="card-content">
+<button class="btn waves-effect waves-light" onclick="buyPlot()">Buy Plot</button>
+<div style="position: absolute; bottom: 10px; left: 10px;">
+  <i class="material-icons tooltipped" data-tooltip="Buy more land to support up to 10 additional hives per plot.">info</i>
+</div>
+            <p>(💲1M)</p>
+            <input type="number" id="buyPlotCount" value="1" class="input-field">
+            <div class="button-group">
+              <button class="btn-small" onclick="setAmount('buyPlotCount', 1)">1</button>
+              <button class="btn-small" onclick="multiplyAmount('buyPlotCount', 10)">x10</button>
+<button class="btn-small" onclick="multiplyAmount('buyPlotCount', 'max')">Max</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
+
+  <button id="resetGameButton" class="btn waves-effect waves-light red">Reset Game</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="bee.js"></script>

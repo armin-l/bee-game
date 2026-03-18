@@ -158,3 +158,17 @@ input {
     flex-basis: 100%;
   }
 }
+
+#resetGameButton {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+}
+
+@media (max-width: 480px) {
+  #resetGameButton {
+    right: 12px;
+    bottom: 12px;
+  }
+}

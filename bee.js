@@ -1,14 +1,34 @@
 let beeCount = 1;
 let hiveCount = 1;
+let plotCount = 1;
 let honeyCount = 0;
 let moneyCount = 0;
 let salesCount = 0;
+
+const HIVES_PER_PLOT = 10;
+const PLOT_COST = 1000000;
+
+function getMaxBeeCapacity() {
+  return hiveCount * 50;
+}
+
+function getMaxHiveCapacity() {
+  return plotCount * HIVES_PER_PLOT;
+}
+
+function clampBeeCount() {
+  const maxBeeCapacity = getMaxBeeCapacity();
+  if (beeCount > maxBeeCapacity) {
+    beeCount = maxBeeCapacity;
+  }
+}
 
 // Save game state to localStorage
 function saveGameState() {
   const gameState = {
     beeCount,
     hiveCount,
+    plotCount,
     honeyCount,
     moneyCount,
     salesCount,
@@ -24,9 +44,11 @@ function loadGameState() {
       const gameState = JSON.parse(savedState);
       beeCount = gameState.beeCount || 1;
       hiveCount = gameState.hiveCount || 1;
+      plotCount = gameState.plotCount || 1;
       honeyCount = gameState.honeyCount || 0;
       moneyCount = gameState.moneyCount || 0;
       salesCount = gameState.salesCount || 0;
+      clampBeeCount();
     } catch (error) {
       console.error("Failed to load game state:", error);
     }
@@ -49,16 +71,23 @@ function multiplyAmount(inputId, factor) {
 
     switch (inputId) {
       case "buyBeeCount":
-        maxValue = Math.floor(moneyCount / 10);
+        maxValue = Math.min(Math.floor(moneyCount / 10), Math.max(0, getMaxBeeCapacity() - beeCount));
         break;
       case "sellHoneyCount":
         maxValue = honeyCount;
         break;
       case "buyHiveCount":
-        maxValue = Math.min(Math.floor(moneyCount / 1000), Math.floor(honeyCount / 1000));
+        maxValue = Math.min(
+          Math.floor(moneyCount / 1000),
+          Math.floor(honeyCount / 1000),
+          Math.max(0, getMaxHiveCapacity() - hiveCount)
+        );
         break;
       case "buySalesCount":
         maxValue = Math.floor(moneyCount / 10000);
+        break;
+      case "buyPlotCount":
+        maxValue = Math.floor(moneyCount / PLOT_COST);
         break;
     }
 
@@ -68,8 +97,9 @@ function multiplyAmount(inputId, factor) {
   }
 }
 function updateCounts() {
-  document.getElementById("beeCount").textContent = `Bees: 🐝${beeCount}`;
-  document.getElementById("hiveCount").textContent = `Hives: 🏠${hiveCount}`;
+  document.getElementById("beeCount").textContent = `Thousand Bees: 🐝${beeCount}`;
+  document.getElementById("hiveCount").textContent = `Hives: 🏠${hiveCount}/${getMaxHiveCapacity()}`;
+  document.getElementById("plotCount").textContent = `Plots of Land: 🌱${plotCount}`;
   document.getElementById("honeyCount").textContent = `Honey: 🍯${honeyCount}`;
   document.getElementById("moneyCount").textContent = `Money: 💲${moneyCount}`;
   document.getElementById("salesCount").textContent = `Sales Team: 👩‍💼${salesCount}`;
@@ -88,6 +118,32 @@ function hideErrorMessage() {
   errorMessageElement.style.display = "none";
 }
 
+function resetGame() {
+  const confirmed = window.confirm("Are you sure you want to reset your game progress?");
+
+  if (!confirmed) {
+    return;
+  }
+
+  beeCount = 1;
+  hiveCount = 1;
+  plotCount = 1;
+  honeyCount = 0;
+  moneyCount = 0;
+  salesCount = 0;
+
+  localStorage.removeItem("gameState");
+
+  setAmount("buyBeeCount", 1);
+  setAmount("sellHoneyCount", 1);
+  setAmount("buyHiveCount", 1);
+  setAmount("buySalesCount", 1);
+  setAmount("buyPlotCount", 1);
+
+  hideErrorMessage();
+  updateCounts();
+}
+
 function buySales() {
   const buySalesamount = parseInt(document.getElementById("buySalesCount").value);
 
@@ -103,6 +159,17 @@ function buySales() {
 
 function buyBee() {
   const buyBeeamount = parseInt(document.getElementById("buyBeeCount").value);
+  const availableBeeCapacity = getMaxBeeCapacity() - beeCount;
+
+  if (availableBeeCapacity <= 0) {
+    showErrorMessage("Bee capacity reached! Buy more hives to hold more bees.");
+    return;
+  }
+
+  if (buyBeeamount > availableBeeCapacity) {
+    showErrorMessage(`You can only buy ${availableBeeCapacity} more bees with your current hives.`);
+    return;
+  }
 
   if (moneyCount >= 10 * buyBeeamount) {
     beeCount += buyBeeamount;
@@ -111,6 +178,19 @@ function buyBee() {
     hideErrorMessage();
   } else {
     showErrorMessage("Not enough money to buy that many bees!");
+  }
+}
+
+function buyPlot() {
+  const buyPlotAmount = parseInt(document.getElementById("buyPlotCount").value);
+
+  if (moneyCount >= PLOT_COST * buyPlotAmount) {
+    plotCount += buyPlotAmount;
+    moneyCount -= PLOT_COST * buyPlotAmount;
+    updateCounts();
+    hideErrorMessage();
+  } else {
+    showErrorMessage("Not enough money to buy that many plots!");
   }
 }
 
@@ -129,6 +209,17 @@ function sellHoney() {
 
 function buyHive() {
   const buyHiveamount = parseInt(document.getElementById("buyHiveCount").value);
+  const availableHiveCapacity = getMaxHiveCapacity() - hiveCount;
+
+  if (availableHiveCapacity <= 0) {
+    showErrorMessage("Hive capacity reached! Buy another plot of land to place more hives.");
+    return;
+  }
+
+  if (buyHiveamount > availableHiveCapacity) {
+    showErrorMessage(`You can only buy ${availableHiveCapacity} more hives with your current plots.`);
+    return;
+  }
 
   if (moneyCount >= 1000 * buyHiveamount && honeyCount >= 1000 * buyHiveamount) {
     hiveCount += buyHiveamount;
@@ -181,12 +272,16 @@ function getRandomEvent() {
 // Random Event
 setInterval(function() {
   beeCount += Math.trunc(beeCount * getRandomEvent());
+  clampBeeCount();
   updateCounts();
 }, 600000); // 1 hour in milliseconds
 
 // Bee production every hour
 setInterval(function() {
-  beeCount += hiveCount;
+  const availableBeeCapacity = getMaxBeeCapacity() - beeCount;
+  if (availableBeeCapacity > 0) {
+    beeCount += Math.min(hiveCount, availableBeeCapacity);
+  }
   updateCounts();
 }, 10000); // 10 seconds in milliseconds
 
@@ -220,6 +315,11 @@ document.addEventListener("DOMContentLoaded", function() {
   // Initialize Materialize tooltips
   const tooltips = document.querySelectorAll('.tooltipped');
   M.Tooltip.init(tooltips);
+
+  const resetButton = document.getElementById("resetGameButton");
+  if (resetButton) {
+    resetButton.addEventListener("click", resetGame);
+  }
 
   // Load game state on page load
   loadGameState();
