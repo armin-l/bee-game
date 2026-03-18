@@ -37,6 +37,24 @@ body.dark-mode #errorMessage {
     border: 1px solid #FF6F61; /* Matching light red border */
 }
 
+body.dark-mode .event-log {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(30, 30, 30, 0.45);
+}
+
+body.dark-mode .event-log-title {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+body.dark-mode .event-log-list li {
+  color: rgba(255, 255, 255, 0.78);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .event-log-time {
+  color: rgba(255, 255, 255, 0.48);
+}
+
 /* Header */
 header {
   background-color: #ffcc00; /* Bright yellow for header */
@@ -44,6 +62,48 @@ header {
   padding: 20px 0;
 }
 
+
+.event-log {
+  max-width: 720px;
+  margin: 12px auto 18px;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid rgba(59, 59, 59, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.event-log-title {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(59, 59, 59, 0.65);
+}
+
+.event-log-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.event-log-list li {
+  margin: 0;
+  padding: 4px 0;
+  font-size: 0.86rem;
+  color: rgba(59, 59, 59, 0.75);
+  border-top: 1px solid rgba(59, 59, 59, 0.08);
+}
+
+.event-log-list li:first-child {
+  border-top: none;
+}
+
+.event-log-time {
+  margin-right: 8px;
+  font-size: 0.76rem;
+  color: rgba(59, 59, 59, 0.5);
+}
 header h1 {
   font-size: 2.5rem;
   margin: 0;

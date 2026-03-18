@@ -15,6 +15,7 @@ const MARKETER_COST = 20000;
 const BASE_HONEY_SELL_PRICE = 5;
 const MARKETER_PRICE_BONUS = 0.05;
 const MANAGER_CUT_PER_HONEY = 1;
+const MAX_EVENT_LOG_ENTRIES = 20;
 
 function getMaxBeeCapacity() {
   return hiveCount * 50;
@@ -160,6 +161,35 @@ function hideErrorMessage() {
   const errorMessageElement = document.getElementById("errorMessage");
   errorMessageElement.textContent = "";
   errorMessageElement.style.display = "none";
+}
+
+function getTimestamp() {
+  return new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
+function addEventLogEntry(message) {
+  const eventLogList = document.getElementById("eventLogList");
+  if (!eventLogList) {
+    return;
+  }
+
+  const listItem = document.createElement("li");
+  const timestamp = document.createElement("span");
+
+  timestamp.className = "event-log-time";
+  timestamp.textContent = `[${getTimestamp()}]`;
+
+  listItem.appendChild(timestamp);
+  listItem.appendChild(document.createTextNode(message));
+  eventLogList.prepend(listItem);
+
+  while (eventLogList.children.length > MAX_EVENT_LOG_ENTRIES) {
+    eventLogList.removeChild(eventLogList.lastElementChild);
+  }
 }
 
 function resetGame() {
@@ -330,47 +360,104 @@ function buyHive() {
 
 function getRandomEvent() {
   const events = [
-    { message: "The queen bee lays a healthy batch of eggs! Bee population is significantly increased!", modifier: 0.3 },
-    { message: "The bees discover a new nesting ground! Bee population is slightly increased.", modifier: 0.1 },
-    { message: "Favorable weather conditions promote brood rearing. Bee population is minimally increased.", modifier: 0.05 },
-    { message: "A new generation of worker bees emerges! Bee population is moderately increased.", modifier: 0.2 },
-    { message: "The hive successfully swarms and establishes a new colony! Bee population is significantly increased.", modifier: 0.4 },
-    { message: "A plentiful pollen source leads to increased brood rearing. Bee population is minimally increased.", modifier: 0.05 },
-    { message: "The beekeeper adds a new feeder full of pollen substitute. Bee population is slightly increased.", modifier: 0.1 },
-    { message: "A successful mite treatment eliminates Varroa infestation. Bee population recovers slightly.", modifier: 0.1 },
-    { message: "A scout bee returns, unable to locate a new nectar source. No change in bee population.", modifier: 0 },
-    { message: "The beekeeper performs a routine hive inspection. No change in bee population.", modifier: 0 },
-    { message: "A light rain showers the area, providing some moisture for the bees. No change in bee population.", modifier: 0 },
-    { message: "The bees spend a sunny day cleaning the hive and preparing for brood rearing. No change in bee population.", modifier: 0 },
-    { message: "The hive experiences a natural fluctuation in bee population. No change in bee population.", modifier: 0 },
-    { message: "A late frost damages nearby flowers, reducing pollen availability. Bee population is slightly decreased.", modifier: -0.1 },
-    { message: "A strong windstorm disrupts the hive entrance, causing bee deaths. Bee population is minimally decreased.", modifier: -0.05 },
-    { message: "A nearby pesticide application contaminates flowers, harming foraging bees. Bee population is moderately decreased.", modifier: -0.2 },
-    { message: "The drone population reaches its peak, leading to increased competition for resources. Bee population is slightly decreased.", modifier: -0.1 },
-    { message: "The queen bee's egg-laying slows down due to age. Bee population slowly decreases.", modifier: -0.1 },
-    { message: "A skunk raids the hive, preying on bees. Bee population is moderately decreased.", modifier: -0.2 },
-    { message: "A nearby wildfire destroys a significant amount of flowering plants. Bee population is heavily decreased!", modifier: -0.5 },
-    { message: "A sudden cold snap reduces foraging activity and bee survival. Bee population is moderately decreased.", modifier: -0.2 },
-    { message: "A malfunctioning feeder leaks and dsub-containerns some bees. Bee population is minimally decreased.", modifier: -0.05 },
-    { message: "The beekeeper accidentally injures some bees during hive inspection. Bee population is minimally decreased.", modifier: -0.05 },
-    { message: "A predator attacks the hive! Bee population is slightly decreased.", modifier: -0.1 },
-    { message: "Varroa mites infest the hive! Bee population is moderately decreased.", modifier: -0.2 },
-    { message: "A harsh winter reduces the bee population. Bee population is heavily decreased!", modifier: -0.5 },
+    { kind: "bee", message: "The queen bee lays a healthy batch of eggs! Bee population is significantly increased!", modifier: 0.3 },
+    { kind: "bee", message: "The bees discover a new nesting ground! Bee population is slightly increased.", modifier: 0.1 },
+    { kind: "bee", message: "Favorable weather conditions promote brood rearing. Bee population is minimally increased.", modifier: 0.05 },
+    { kind: "bee", message: "A new generation of worker bees emerges! Bee population is moderately increased.", modifier: 0.2 },
+    { kind: "bee", message: "The hive successfully swarms and establishes a new colony! Bee population is significantly increased.", modifier: 0.4 },
+    { kind: "bee", message: "A plentiful pollen source leads to increased brood rearing. Bee population is minimally increased.", modifier: 0.05 },
+    { kind: "bee", message: "The beekeeper adds a new feeder full of pollen substitute. Bee population is slightly increased.", modifier: 0.1 },
+    { kind: "bee", message: "A successful mite treatment eliminates Varroa infestation. Bee population recovers slightly.", modifier: 0.1 },
+    { kind: "bee", message: "A scout bee returns, unable to locate a new nectar source. No change in bee population.", modifier: 0 },
+    { kind: "bee", message: "The beekeeper performs a routine hive inspection. No change in bee population.", modifier: 0 },
+    { kind: "bee", message: "A light rain showers the area, providing some moisture for the bees. No change in bee population.", modifier: 0 },
+    { kind: "bee", message: "The bees spend a sunny day cleaning the hive and preparing for brood rearing. No change in bee population.", modifier: 0 },
+    { kind: "bee", message: "The hive experiences a natural fluctuation in bee population. No change in bee population.", modifier: 0 },
+    { kind: "bee", message: "A late frost damages nearby flowers, reducing pollen availability. Bee population is slightly decreased.", modifier: -0.1 },
+    { kind: "bee", message: "A strong windstorm disrupts the hive entrance, causing bee deaths. Bee population is minimally decreased.", modifier: -0.05 },
+    { kind: "bee", message: "A nearby pesticide application contaminates flowers, harming foraging bees. Bee population is moderately decreased.", modifier: -0.2 },
+    { kind: "bee", message: "The drone population reaches its peak, leading to increased competition for resources. Bee population is slightly decreased.", modifier: -0.1 },
+    { kind: "bee", message: "The queen bee's egg-laying slows down due to age. Bee population slowly decreases.", modifier: -0.1 },
+    { kind: "bee", message: "A skunk raids the hive, preying on bees. Bee population is moderately decreased.", modifier: -0.2 },
+    { kind: "bee", message: "A nearby wildfire destroys a significant amount of flowering plants. Bee population is heavily decreased!", modifier: -0.5 },
+    { kind: "bee", message: "A sudden cold snap reduces foraging activity and bee survival. Bee population is moderately decreased.", modifier: -0.2 },
+    { kind: "bee", message: "A malfunctioning feeder leaks and dsub-containerns some bees. Bee population is minimally decreased.", modifier: -0.05 },
+    { kind: "bee", message: "The beekeeper accidentally injures some bees during hive inspection. Bee population is minimally decreased.", modifier: -0.05 },
+    { kind: "bee", message: "A predator attacks the hive! Bee population is slightly decreased.", modifier: -0.1 },
+    { kind: "bee", message: "Varroa mites infest the hive! Bee population is moderately decreased.", modifier: -0.2 },
+    { kind: "bee", message: "A harsh winter reduces the bee population. Bee population is heavily decreased!", modifier: -0.5 },
+    {
+      kind: "money",
+      message: "A new plot near a highway boosts foot traffic. Land value payout increases your cash.",
+      amount: roundToCents(plotCount * 2500),
+    },
+    {
+      kind: "money",
+      message: "Property taxes hit your plots this season. You lose money on land upkeep.",
+      amount: roundToCents(-plotCount * 1200),
+    },
+    {
+      kind: "money",
+      message: "A manager negotiates better supplier rates. Operations savings increase your cash.",
+      amount: roundToCents(managerCount * 1800),
+    },
+    {
+      kind: "money",
+      message: "A manager-approved process mistake causes waste. Recovery costs reduce your cash.",
+      amount: roundToCents(-managerCount * 1400),
+    },
+    {
+      kind: "money",
+      message: "Your marketers launch a successful local campaign. Honey demand surges.",
+      amount: roundToCents(marketerCount * 2200),
+    },
+    {
+      kind: "money",
+      message: "An ad campaign underperforms this cycle. Marketing spend cuts into your cash.",
+      amount: roundToCents(-marketerCount * 1600),
+    },
+    {
+      kind: "money",
+      message: "Sales People close a bulk retailer contract. You earn a strong one-time payment.",
+      amount: roundToCents(salesCount * 2000),
+    },
+    {
+      kind: "money",
+      message: "A key buyer delays payment from the sales pipeline. Cash flow drops.",
+      amount: roundToCents(-salesCount * 1500),
+    },
+    {
+      kind: "money",
+      message: "No major market news this cycle. Your cash remains steady.",
+      amount: 0,
+    },
   ];
 
   const randomIndex = Math.floor(Math.random() * events.length);
-  const event = events[randomIndex];
-
-  showErrorMessage(event.message);
-  return event.modifier;
+  return events[randomIndex];
 }
 
-// Random Event
+// Unified random event system
 setInterval(function() {
-  beeCount += Math.trunc(beeCount * getRandomEvent());
-  clampBeeCount();
+  const event = getRandomEvent();
+  let eventMessage = event.message;
+
+  if (event.kind === "bee") {
+    beeCount += Math.trunc(beeCount * event.modifier);
+    clampBeeCount();
+  } else {
+    moneyCount = roundToCents(Math.max(0, moneyCount + event.amount));
+    const amountLabel = event.amount >= 0
+      ? ` Money +$${event.amount.toFixed(2)}`
+      : ` Money -$${Math.abs(event.amount).toFixed(2)}`;
+    eventMessage += amountLabel;
+  }
+
+  showErrorMessage(eventMessage);
+  addEventLogEntry(eventMessage);
+
   updateCounts();
-}, 600000); // 1 hour in milliseconds
+}, 360000); // 6 minutes in milliseconds
 
 // Bee production every hour
 setInterval(function() {
@@ -379,7 +466,7 @@ setInterval(function() {
     beeCount += Math.min(hiveCount, availableBeeCapacity);
   }
   updateCounts();
-}, 10000); // 10 seconds in milliseconds
+}, 3600000); // 1 hour in milliseconds
 
 // Honey production every second
 setInterval(function() {
