@@ -34,7 +34,7 @@ function roundToCents(value) {
 }
 
 function getHoneySellPricePerUnit() {
-  return roundToCents(BASE_HONEY_SELL_PRICE * (1 + marketerCount * MARKETER_PRICE_BONUS));
+  return roundToCents(BASE_HONEY_SELL_PRICE * Math.pow(1 + MARKETER_PRICE_BONUS, marketerCount));
 }
 
 function getNetHoneyRevenuePerUnit() {
@@ -148,6 +148,7 @@ function updateCounts() {
   document.getElementById("marketerCount").textContent = `Marketers: 📣${marketerCount}`;
   document.getElementById("staffCap").textContent = `Sales + Marketers Capacity: ${salesCount + marketerCount}/${getMaxSalesAndMarketers()}`;
   document.getElementById("sellPrice").textContent = `Honey Sell Price: 💲${getHoneySellPricePerUnit().toFixed(2)} each`;
+  document.getElementById("sellHoneyCardPrice").textContent = `(💲${getNetHoneyRevenuePerUnit().toFixed(2)})`;
   document.getElementById("managerCut").textContent = `Manager Cut: 💲${(managerCount * MANAGER_CUT_PER_HONEY_PER_MANAGER).toFixed(2)} total per glass`;
   saveGameState();
 }
